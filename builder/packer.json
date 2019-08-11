@@ -1,0 +1,61 @@
+{
+  "variables": {
+    "client_id": "",
+    "client_secret": "",
+    "storage_account": "",
+    "subscription_id": "",
+    "tenant_id": "",
+    "gallery_resource_group": "",
+    "gallery_name": "",
+    "image_name": "",
+    "image_version": "",
+    "managed_image_name": "",
+    "managed_image_resource_group": ""
+
+  },
+  "builders": [{
+    "type": "azure-arm",
+
+    "client_id": "{{user `client_id`}}",
+    "client_secret": "{{user `client_secret`}}",
+    "subscription_id": "{{user `subscription_id`}}",
+    "tenant_id": "{{user `tenant_id`}}",
+
+    "managed_image_name": "{{user `managed_image_name`}}",
+    "managed_image_resource_group_name": "{{user `managed_image_resource_group`}}",
+
+    "image_publisher": "OpenLogic",
+    "image_offer": "CentOS",
+    "image_sku": "7.5",
+
+    "location": "East US",
+    "vm_size": "Standard_B1s",
+    "os_type": "Linux",
+
+    "shared_image_gallery_destination": {
+        "resource_group": "{{user `gallery_resource_group`}}",
+        "gallery_name": "{{user `gallery_name`}}",
+        "image_name": "{{user `image_name`}}",
+        "image_version": "{{user `image_version`}}",
+        "replication_regions": ["eastus"]
+    }
+  }],
+  "provisioners": [{
+    "type": "shell",
+      "scripts": [
+        "../script/provision.sh"
+    ]
+  },
+  {
+    "type": "ansible-local",
+    "playbook_dir": "../ansible",
+    "playbook_file": "../ansible/site.yml",
+    "inventory_file": "../ansible/hosts"
+  },
+  {
+    "type": "shell",
+      "scripts": [
+        "../script/deprovision.sh"
+    ]
+  }]
+}

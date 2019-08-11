@@ -1,0 +1,56 @@
+{
+  "variables": {
+    "client_id": "",
+    "client_secret": "",
+    "storage_account": "",
+    "subscription_id": "",
+    "tenant_id": "",
+    "managed_image_name": "",
+    "managed_image_resource_group": ""
+
+  },
+  "builders": [{
+    "type": "azure-arm",
+
+    "client_id": "{{user `client_id`}}",
+    "client_secret": "{{user `client_secret`}}",
+    "subscription_id": "{{user `subscription_id`}}",
+    "tenant_id": "{{user `tenant_id`}}",
+
+    "managed_image_name": "{{user `managed_image_name`}}",
+    "managed_image_resource_group_name": "{{user `managed_image_resource_group`}}",
+
+    "image_publisher": "OpenLogic",
+    "image_offer": "CentOS",
+    "image_sku": "7.5",
+
+    "location": "East US",
+    "vm_size": "Standard_B1s",
+    "os_type": "Linux"
+
+  }],
+  "provisioners": [{
+    "type": "shell",
+      "scripts": [
+        "../script/provision.sh"
+    ]
+  },
+  {
+    "type": "ansible-local",
+    "playbook_file": "../ansible/site.yml",
+    "inventory_file": "../ansible/hosts",
+    "role_paths": [
+      "../ansible/roles/create-ansible-user",
+      "../ansible/roles/sshd",
+      "../ansible/roles/common",
+      "../ansible/roles/terraform"
+
+    ]
+  },
+  {
+    "type": "shell",
+      "scripts": [
+        "../script/deprovision.sh"
+    ]
+  }]
+}
