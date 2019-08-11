@@ -10,6 +10,6 @@ Packer & Ansible files for Azure ARM to create vm image for building vm image
 
 # How to make your image
 1. Execute shell script to clone ansible playbook for provision from git and build vm image using packer
-"""shell
+```shell
 source ./build.sh
-"""
+```
